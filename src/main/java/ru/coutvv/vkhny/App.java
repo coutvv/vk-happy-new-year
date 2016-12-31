@@ -26,8 +26,8 @@ public class App {
 			
 			@Override
 			public boolean isItTime() {
-				System.out.println(LocalDateTime.now().getMinute() );
-				return LocalDateTime.now().getMinute() == 36; //а здесь новый 2017 год!!!)))
+				System.out.println(LocalDateTime.now().getYear() );
+				return LocalDateTime.now().getYear() == 2017; //а здесь новый 2017 год!!!)))
 			}
 
 			@Override
@@ -38,8 +38,14 @@ public class App {
 						Long id = friend.getId();
 						String name = friend.getFirstName();
 						String message = cong.createCongratulation(name);
-						System.out.println("sending to " + id + " : " + message);//сюда нужно сендинг поставить
-						LagUtil.lag();
+						try {
+							msg.sendMessage(id, message);
+						} catch(Exception e) {
+							System.out.println("can't send a message to " + name);
+							LagUtil.lag(10000);
+						}
+						System.out.println("sended to " + id + " : " + message);//сюда нужно сендинг поставить
+						LagUtil.lag();LagUtil.lag();LagUtil.lag();
 					}
 				} catch (ApiException | ClientException e) {
 					e.printStackTrace();
