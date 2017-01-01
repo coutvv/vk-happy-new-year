@@ -3,6 +3,7 @@ package ru.coutvv.vkhny;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.vk.api.sdk.exceptions.ApiException;
@@ -24,6 +25,7 @@ public class App {
 		
 		new Thread(new Waiter(new WhatWait() {
 			
+			List<Account> accs = new LinkedList<>();
 			@Override
 			public boolean isItTime() {
 				System.out.println(LocalDateTime.now().getYear() );
@@ -40,17 +42,42 @@ public class App {
 						String message = cong.createCongratulation(name);
 						try {
 							msg.sendMessage(id, message);
+							System.out.println("sended to " + id + " : " + message);//сюда нужно сендинг поставить
 						} catch(Exception e) {
-							System.out.println("can't send a message to " + name);
+							accs.add(friend);
+							System.out.println("can't send a message to " + name + " " + friend.getLastName());
 							LagUtil.lag(10000);
 						}
-						System.out.println("sended to " + id + " : " + message);//сюда нужно сендинг поставить
 						LagUtil.lag();LagUtil.lag();LagUtil.lag();
 					}
+					closure();
 				} catch (ApiException | ClientException e) {
 					e.printStackTrace();
 				}
 				
+			}
+			/**
+			 * Попытка допоздравить-с
+			 */
+			private void closure(){
+				long timeout = 30000;
+				while(!accs.isEmpty()) {
+					for(Account a : accs) {
+						try {
+
+							String message = cong.createCongratulation(a.getFirstName());
+							msg.sendMessage(a.getId(), message );
+							accs.remove(a);
+							System.out.println("sended to " + a.getId() + " : " + message);//сюда нужно сендинг поставить
+						} catch(Exception e) {
+							System.out.println("can't send a message to " + a.getFirstName() + " " + a.getLastName());
+//							LagUtil.lag(10000);
+							LagUtil.lag(timeout);
+							timeout = timeout * 2;
+						}
+						
+					}
+				}
 			}
 		})).start();
 		
