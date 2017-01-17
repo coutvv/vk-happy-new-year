@@ -19,9 +19,9 @@ import ru.coutvv.vkhny.waitforit.WhatWait;
 public class App {
 
 	public static void main(String[] args) throws IOException, ApiException, ClientException, URISyntaxException {
-		MessageManager msg = new MessageManager("app.properties");
+		final MessageManager msg = new MessageManager("app.properties");
 		
-		Congratulation cong = new Congratulation("templates.txt");
+		final Congratulation cong = new Congratulation("templates.txt");
 		
 		new Thread(new Waiter(new WhatWait() {
 			

@@ -40,8 +40,8 @@ uploadArchives {
 task fatJar(type: Jar) {
 	manifest {
 		attributes 'Implementation-Title': 'Gradle Jar File Example',
-					'Implementation-Version' : version,
-					'Main-Class' : 'ru.coutvv.vkhny.App'
+				   'Implementation-Version' : version,
+				   'Main-Class' : 'ru.coutvv.vkhny.App'
 	}
 	baseName = project.name + '-fat'
 	from {configurations.compile.collect {it.isDirectory() ? it : zipTree(it)} }
